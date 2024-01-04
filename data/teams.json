@@ -1,0 +1,22 @@
+{
+  "DS1": {
+    "slug": "ds1",
+    "members": 10,
+    "points": -200
+  },
+  "DS2": {
+    "slug": "ds2",
+    "members": 9,
+    "points": -300
+  },
+  "DS3": {
+  "slug": "ds3",
+  "members": 10,
+  "points": -250
+  },
+  "DS4": {
+    "slug": "ds4",
+    "members": 12,
+    "points": 0
+  }
+}
