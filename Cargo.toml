@@ -10,3 +10,4 @@ chrono = { version = "0.4", features = ["serde"] }
 office = "0.8.1"
 rocket = { version = "0.5.0", features = ["json"] }
 serde = { version = "1.0.194", features = ["derive"] }
+serde_json = "1.0.110"

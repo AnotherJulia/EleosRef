@@ -1,49 +1,32 @@
-
-// #[macro_use] extern crate rocket;
-
 mod models;
 mod parser;
 mod utils;
+mod scheduler;
 
-use rocket::serde::json::Json;
+use crate::models::matches::Match;
 use crate::parser::excel::extract_match_details_from_sheet;
 use crate::parser::filter::filter_matches;
-
-
-// #[get("/")]
-// fn hello() -> &'static str {
-//     "Hello, world!"
-// }
-//
-// #[get("/process")]
-// fn run() -> Json<Vec<Match>> {
-//     // Custom Parameters
-//     let file_location: &str = "data/wedstrijden.xlsx";
-//     let sheet_name: &str = "Wedstrijden";
-//     let home_location: &str = "De Ackers, Bergschenhoek";
-//
-//     let m = parse_excel(file_location, sheet_name);
-//     let matches = filter_matches(m, home_location);
-//
-//     Json(matches)
-// }
-//
-// #[launch]
-// fn rocket() -> _ {
-//     rocket::build().mount("/", routes![hello, run])
-// }
-//
+use crate::parser::json::extract_team_data;
+use crate::scheduler::scheduler::assign_referees;
 
 fn main() {
-    let file_location: &str = "data/wedstrijden.xlsx";
+    let match_location: &str = "data/wedstrijden.xlsx";
+    let team_location: &str = "data/teams.json";
     let sheet_name: &str = "Wedstrijden";
     let home_location: &str = "De Ackers, Bergschenhoek";
 
-    let matches = extract_match_details_from_sheet(file_location, sheet_name).unwrap();
-    let filtered_matches = filter_matches(matches, home_location);
+    // extract the match data from the excel sheets and filter it so it's just "home matches" with no ref
+    let matches = extract_match_details_from_sheet(match_location, sheet_name).unwrap();
+    let filtered_matches: Vec<Match> = filter_matches(&matches, home_location);
+    let number_of_matches = filtered_matches.len() as i32;
 
-    for m in filtered_matches {
-        println!("{:?}", m);
-    }
+    // let extract the team data -> finding the number of turns per team
+    let teams = extract_team_data(team_location, number_of_matches);
+
+
+
+    // let's run the scheduler
+    let schedule = assign_referees(matches, filtered_matches);
+
 
 }

@@ -305,6 +305,7 @@ dependencies = [
  "office",
  "rocket",
  "serde",
+ "serde_json",
 ]
 
 [[package]]

@@ -1,5 +1,5 @@
 use chrono::{NaiveDate, NaiveTime};
-use crate::models::excel_match::{ExcelMatch, Match};
+use crate::models::matches::{ExcelMatch, Match};
 
 static mut INVALID_DATE: Option<NaiveDate> = None;
 static mut INVALID_TIME: Option<NaiveTime> = None;
@@ -11,8 +11,8 @@ pub fn init() {
     }
 }
 
-pub fn filter_matches(matches: Vec<ExcelMatch>, home_loc: &str) -> Vec<Match> {
-    let mut filtered_matches = Vec::new();
+pub fn filter_matches(matches: &Vec<Match>, home_loc: &str) -> Vec<Match> {
+    let mut filtered_matches:Vec<Match> = Vec::new();
 
     for m in matches {
         unsafe {
@@ -24,19 +24,9 @@ pub fn filter_matches(matches: Vec<ExcelMatch>, home_loc: &str) -> Vec<Match> {
 
         // Let's filter out the out-matches
         if m.location == home_loc && m.first_ref == "" && m.second_ref == "" {
-            filtered_matches.push(create_match(m));
+            filtered_matches.push(m.clone());
         }
     }
 
     filtered_matches
-}
-
-fn create_match(m: ExcelMatch) -> Match {
-    Match {
-        date: m.date,
-        time: m.time,
-        field: m.field,
-        first_ref: "".to_string(),
-        second_ref: "".to_string(),
-    }
 }

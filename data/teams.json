@@ -1,22 +1,66 @@
 {
   "DS1": {
-    "slug": "ds1",
     "members": 10,
     "points": -200
   },
   "DS2": {
-    "slug": "ds2",
     "members": 9,
     "points": -300
   },
   "DS3": {
-  "slug": "ds3",
   "members": 10,
   "points": -250
   },
   "DS4": {
-    "slug": "ds4",
     "members": 12,
     "points": 0
+  },
+  "DS5": {
+    "members": 10,
+    "points": -400
+  },
+  "DS6": {
+    "members": 10,
+    "points": -400
+  },
+  "DS7": {
+    "members": 10,
+    "points": -400
+  },
+  "DS8": {
+    "members": 10,
+    "points": -400
+  },
+  "DS9": {
+    "members": 10,
+    "points": -400
+  },
+  "HS1": {
+    "members": 12,
+    "points": -50
+  },
+  "HS2": {
+    "members": 12,
+    "points": -50
+  },
+  "HS3": {
+    "members": 12,
+    "points": -50
+  },
+  "HS4": {
+    "members": 12,
+    "points": -50
+  },
+  "HS5": {
+    "members": 12,
+    "points": -50
+  },
+  "HS6": {
+    "members": 12,
+    "points": -50
+  },
+  "HS7": {
+    "members": 12,
+    "points": -50
   }
 }

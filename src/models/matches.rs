@@ -7,7 +7,7 @@ pub struct ExcelMatch {
     pub date: NaiveDate,
     pub time: NaiveTime,
     pub home_team: String,
-    pub out_team: String,
+    pub away_team: String,
     pub location: String,
     pub field: i32,
     pub first_ref: String,
@@ -28,10 +28,13 @@ impl ExcelMatch {
 }
 
 /// Matchdata filtered for use in the scheduler
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Match {
     pub date: NaiveDate,
     pub time: NaiveTime,
+    pub home_team: String,
+    pub away_team: String,
+    pub location: String,
     pub field: i32,
     pub first_ref: String,
     pub second_ref: String,

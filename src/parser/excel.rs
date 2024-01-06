@@ -1,11 +1,11 @@
 use chrono::{NaiveDate, NaiveTime};
 use office::Excel;
-use crate::models::excel_match::{ExcelMatch};
+use crate::models::matches::{ExcelMatch, Match};
 use crate::utils::time::{ExcelTimeConverter};
 use crate::utils::date::{ExcelDateConverter};
 
-pub fn extract_match_details_from_sheet(path: &str, sheet: &str) -> Result<Vec<ExcelMatch>, String> {
-    let mut matches: Vec<ExcelMatch> = Vec::new();
+pub fn extract_match_details_from_sheet(path: &str, sheet: &str) -> Result<Vec<Match>, String> {
+    let mut matches: Vec<Match> = Vec::new();
     let mut excel = Excel::open(path).map_err(|e| e.to_string())?;
     let r = excel.worksheet_range(sheet).map_err(|e| e.to_string())?;
 
@@ -20,11 +20,11 @@ pub fn extract_match_details_from_sheet(path: &str, sheet: &str) -> Result<Vec<E
         let first_ref = parse_referee(row.get(12));
         let second_ref = parse_referee(row.get(13));
 
-        let match_details = ExcelMatch {
+        let match_details = Match {
             date: date_str,
             time: time_str,
             home_team: home_str,
-            out_team: out_str,
+            away_team: out_str,
             location: location_str,
             field: field_int,
             first_ref,
