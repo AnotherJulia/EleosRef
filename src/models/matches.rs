@@ -19,11 +19,11 @@ impl Match {
     /// Print out the match data
     pub fn print(&self) -> String {
         format!(
-            "Date: {}, Time: {}, Location: {}, Field: {}",
+            "Date: {}, Time: {}, Location: {}, Ref: {}",
             self.date,
             self.time,
             self.location,
-            self.field,
+            self.first_ref,
         )
     }
 }

@@ -15,6 +15,7 @@ pub fn filter_matches(matches: &Vec<Match>, home_loc: &str) -> Vec<Match> {
     let mut filtered_matches:Vec<Match> = Vec::new();
 
     for m in matches {
+        // hehe
         unsafe {
             // Make sure that the match is actually planned in the system
             if Some(m.date) == INVALID_DATE || Some(m.time) == INVALID_TIME {

@@ -1,6 +1,6 @@
 use std::hash::{Hash, Hasher};
 
-#[derive(Debug, Eq, Hash, PartialEq)]
+#[derive(Debug, Eq, Hash, PartialEq, Clone)]
 pub struct Team {
     pub name: String,
     pub members: u32,

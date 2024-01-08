@@ -26,4 +26,8 @@ fn main() {
 
     let schedule = create_schedule(matches, filtered_matches, teams);
 
+    for m in schedule {
+        println!("{:?}", m);
+    }
+
 }
