@@ -16,21 +16,25 @@ pub fn create_schedule(matches: Vec<Match>, filtered_matches: Vec<Match>, teams:
 
     // Go over the matches that need to be divided across the teams -> check what teams are available
     // score the teams for "best fit" -> go along the list who is "eligible" to ref.
-    // TODO: BALANCING
+    // TODO: Balancing -> option is going over the teams again if over amount of req. turns (adjustment loop)
 
     // filtered matches are the home-only
     for m in filtered_matches {
         if m.first_ref == "" {
             let teams_available = find_available_teams(&m.date, &m.time, &availability);
+
+            // Sort in order of "best"
+            let sorted_teams = sort_by_score(teams_available, &filtered_matches);
+
         }
     }
-
-
 
     schedule
 }
 
 fn determine_availability(matches: Vec<Match>, filtered_matches: &Vec<Match>, teams: Vec<Team>) -> Availability {
+    // TODO: Availability right now has the problem that 15 minutes in-to the game can possibly count as "available"
+
     // Hashmap with for each team, the times that they are available
     let mut availability: Availability = HashMap::new();
 
@@ -94,7 +98,6 @@ fn populate_team_availability (team: &Team, matches: &Vec<Match>, timeslots: &Ti
         }
     }
 
-
     team_availability
 }
 
@@ -109,5 +112,15 @@ fn find_available_teams(date: &NaiveDate, time: &NaiveTime, availability: &Avail
     println!("{:?}", teams_available);
 
     teams_available
+}
+
+fn sort_by_score(available_teams: Vec<Team>, matches: &Vec<Match>) -> Vec<Team> {
+    let sorted: Vec<Team> = Vec::new();
+
+
+
+
+
+    sorted
 }
 

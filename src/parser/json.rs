@@ -66,6 +66,7 @@ pub fn extract_team_data(path: &str, n_matches: i32) -> Vec<Team> {
     let mut adjustment = n_matches - total_turns;
 
     // While that adjustment is not yet 0; we continuously adjust teams turns
+    // TODO: Can currently get stuck on some adjustment values -> how to get out of this loop
     while adjustment != 0 {
         println!("Running - adjustment: {}", adjustment);
 
