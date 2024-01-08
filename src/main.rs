@@ -3,8 +3,10 @@ mod parser;
 mod utils;
 mod scheduler;
 
+use std::error::Error;
 use crate::models::matches::Match;
 use crate::parser::excel::extract_match_details_from_sheet;
+use crate::parser::export::prepare_and_write_schedule;
 use crate::parser::filter::filter_matches;
 use crate::parser::json::extract_team_data;
 use crate::scheduler::scheduler::{create_schedule};
@@ -29,12 +31,5 @@ fn main() {
 
     let schedule_results = create_schedule(matches, filtered_matches, teams);
 
-    for m in schedule_results.schedule {
-        println!("{:?}", m);
-    }
-
-    for t in schedule_results.team_infos {
-        println!("{:?}", t);
-    }
-
+    let ok = prepare_and_write_schedule(schedule_results, "results/schedule.csv");
 }
