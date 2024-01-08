@@ -48,7 +48,7 @@ fn parse_date(cell: Option<&office::DataType>) -> NaiveDate {
     let default_date: NaiveDate = NaiveDate::from_ymd_opt(2000, 1, 1).unwrap();
     match cell {
         Some(office::DataType::Float(f)) => {
-            ExcelDateConverter::convert(*f)
+            ExcelDateConverter::convert(f)
         },
         _ => default_date,
     }
@@ -58,7 +58,7 @@ fn parse_time(cell: Option<&office::DataType>) -> NaiveTime {
     let default_time: NaiveTime = NaiveTime::from_hms_opt(0, 0, 0).unwrap();
     match cell {
         Some(office::DataType::Float(f)) => {
-            ExcelTimeConverter::convert(*f)
+            ExcelTimeConverter::convert(f)
         },
         _ => default_time
     }
@@ -75,7 +75,7 @@ fn parse_location(cell: Option<&office::DataType>) -> String {
 
 fn parse_field(cell: Option<&office::DataType>) -> i32 {
     match cell {
-        Some(office::DataType::Float(f)) => *f as i32,
+        Some(office::DataType::Float(f)) => (*f).clone() as i32,
         Some(office::DataType::String(_)) => 0,
         _ => panic!("Unexpected type in colum Veld")
     }

@@ -1,65 +1,49 @@
 {
-  "DS1": {
+  "Volley2B DS 1": {
     "members": 10,
     "points": -200
   },
-  "DS2": {
+  "Volley2B DS2": {
     "members": 9,
     "points": -300
   },
-  "DS3": {
+  "Volley2B DS3": {
   "members": 10,
   "points": -250
   },
-  "DS4": {
+  "Volley2B DS4": {
     "members": 12,
     "points": 0
   },
-  "DS5": {
+  "Volley2B DS5": {
     "members": 10,
     "points": -400
   },
-  "DS6": {
+  "Volley2B DS6": {
     "members": 10,
     "points": -400
   },
-  "DS7": {
+  "Volley2B DS7": {
     "members": 10,
     "points": -400
   },
-  "DS8": {
+  "Volley2B DS8": {
     "members": 10,
     "points": -400
   },
-  "DS9": {
+  "Volley2B DS9": {
     "members": 10,
     "points": -400
   },
-  "HS1": {
+  "Volley2B HS1": {
     "members": 12,
     "points": -50
   },
-  "HS2": {
+  "Volley2B HS2": {
     "members": 12,
     "points": -50
   },
-  "HS3": {
-    "members": 12,
-    "points": -50
-  },
-  "HS4": {
-    "members": 12,
-    "points": -50
-  },
-  "HS5": {
-    "members": 12,
-    "points": -50
-  },
-  "HS6": {
-    "members": 12,
-    "points": -50
-  },
-  "HS7": {
+  "Volley2B HS3": {
     "members": 12,
     "points": -50
   }

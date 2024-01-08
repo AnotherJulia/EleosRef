@@ -7,7 +7,7 @@ use crate::models::matches::Match;
 use crate::parser::excel::extract_match_details_from_sheet;
 use crate::parser::filter::filter_matches;
 use crate::parser::json::extract_team_data;
-use crate::scheduler::scheduler::determine_timeslots;
+use crate::scheduler::scheduler::{create_schedule};
 
 fn main() {
     let match_location: &str = "data/wedstrijden.xlsx";
@@ -24,9 +24,6 @@ fn main() {
     // let extract the team data -> finding the number of turns per team
     let teams = extract_team_data(team_location, number_of_matches);
 
-
-    determine_timeslots(matches);
-
-
+    let schedule = create_schedule(matches, filtered_matches, teams);
 
 }
