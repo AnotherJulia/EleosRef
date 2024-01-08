@@ -22,6 +22,8 @@ fn main() {
 
     // extract the match data from the excel sheets and filter it so it's just "home matches" with no ref
     let matches = extract_match_details_from_sheet(match_location, sheet_name).unwrap();
+    println!("{:?}", &matches.len());
+
     let filtered_matches: Vec<Match> = filter_matches(&matches, home_location);
 
     let number_of_matches = filtered_matches.len() as i32;
@@ -29,7 +31,9 @@ fn main() {
     // let extract the team data -> finding the number of turns per team
     let teams = extract_team_data(team_location, number_of_matches);
 
-    let schedule_results = create_schedule(matches, filtered_matches, teams);
+    for t in teams {
+        println!("{:?}", t);
+    }
 
-    let ok = prepare_and_write_schedule(schedule_results, "results/schedule.csv");
+    let schedule = create_schedule()
 }

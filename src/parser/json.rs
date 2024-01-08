@@ -4,7 +4,6 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 struct Data {
-    members: u32,
     points: i32,
 }
 
@@ -22,7 +21,6 @@ pub fn extract_team_data(path: &str, n_matches: i32) -> Vec<Team> {
     for (name, team) in teams_data {
         let t = Team {
             name,
-            members: team.members,
             points: team.points,
             turns_needed: 0,
         };
@@ -66,20 +64,18 @@ pub fn extract_team_data(path: &str, n_matches: i32) -> Vec<Team> {
     let mut adjustment = n_matches - total_turns;
 
     // While that adjustment is not yet 0; we continuously adjust teams turns
-    // TODO: Can currently get stuck on some adjustment values -> how to get out of this loop
     while adjustment != 0 {
         println!("Running - adjustment: {}", adjustment);
 
+        // Calculate how many turns can be added or taken from each team equally
+        let per_team_adjustment = adjustment / teams.len() as i32;
+
         for team in &mut teams {
-
-            if adjustment > 0 && team.turns_needed < (-team.points / points_per_turn) {
-                // if adjustment is positive (more matches than turns) -> teams turn are less than "required" -> they are given a turn
-
+            if adjustment > 0 {
                 team.turns_needed += 1;
                 adjustment -= 1;
             } else if adjustment < 0 && team.turns_needed > 4 {
                 // if adjustment is negative (more turns than matches) -> team has more than 4 turns -> we can take one away from them
-
                 team.turns_needed -= 1;
                 adjustment += 1;
             }

@@ -1,66 +1,44 @@
 {
   "Volley2B DS 1": {
-    "members": 10,
-    "points": -200
+    "points": -300
   },
   "Volley2B DS 2": {
-    "members": 9,
     "points": -300
   },
   "Volley2B DS 3": {
-  "members": 10,
-  "points": -250
+    "points": -450
   },
   "Volley2B DS 4": {
-    "members": 12,
-    "points": 0
+    "points": -50
   },
   "Volley2B DS 5": {
-    "members": 10,
-    "points": -400
+    "points": -125
   },
   "Volley2B DS 6": {
-    "members": 10,
-    "points": -400
+    "points": 150
   },
   "Volley2B DS 7": {
-    "members": 10,
-    "points": -400
+    "points": -375
   },
   "Volley2B DS 8": {
-    "members": 10,
-    "points": -400
+    "points": -200
   },
   "Volley2B DS 9": {
-    "members": 10,
-    "points": -400
+    "points": -575
   },
   "Volley2B HS 1": {
-    "members": 12,
-    "points": -50
+    "points": -350
   },
   "Volley2B HS 2": {
-    "members": 12,
-    "points": -50
+    "points": 25
   },
   "Volley2B HS 3": {
-    "members": 12,
-    "points": -50
+    "points": 150
   },
   "Volley2B HS 4": {
-    "members": 12,
-    "points": -50
+    "points": -250
   },
   "Volley2B HS 5": {
-    "members": 12,
-    "points": -50
-  },
-  "Volley2B HS 6": {
-    "members": 12,
-    "points": -50
-  },
-  "Volley2B HS 7": {
-    "members": 12,
-    "points": -50
+    "points": -175
   }
 }
