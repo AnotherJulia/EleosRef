@@ -9,6 +9,9 @@ use crate::parser::filter::filter_matches;
 use crate::parser::json::extract_team_data;
 use crate::scheduler::scheduler::{create_schedule};
 
+pub const MAX_GAP_THRESHOLD: i32 = 4 * 60;
+pub const WEIGHT_REMAINING_TURNS: i32 = 2;
+
 fn main() {
     let match_location: &str = "data/wedstrijden.xlsx";
     let team_location: &str = "data/teams.json";
@@ -24,10 +27,14 @@ fn main() {
     // let extract the team data -> finding the number of turns per team
     let teams = extract_team_data(team_location, number_of_matches);
 
-    let schedule = create_schedule(matches, filtered_matches, teams);
+    let schedule_results = create_schedule(matches, filtered_matches, teams);
 
-    for m in schedule {
+    for m in schedule_results.schedule {
         println!("{:?}", m);
+    }
+
+    for t in schedule_results.team_infos {
+        println!("{:?}", t);
     }
 
 }

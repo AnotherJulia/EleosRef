@@ -1,5 +1,7 @@
 use chrono::{NaiveDate, NaiveTime};
 use serde::{Serialize, Deserialize};
+use std::collections::HashMap;
+use crate::models::team::Team;
 
 
 /// Match data filtered for use in the scheduler
@@ -27,3 +29,7 @@ impl Match {
         )
     }
 }
+
+
+// Hashmap with key: Team and the team's corresponding matches as vector value
+pub type TeamsMatches = HashMap<Team, Vec<Match>>;

@@ -1,42 +1,96 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::collections::hash_map::Entry;
 use chrono::{NaiveDate, NaiveTime};
-use crate::models::availability::{Availability, Timeslots};
+use crate::{MAX_GAP_THRESHOLD, WEIGHT_REMAINING_TURNS};
+use crate::models::availability::{Availability, HashmapSet, PlayTimes, TeamSchedule, Timeslots};
 use crate::models::matches::Match;
 use crate::models::team::Team;
-use crate::utils::hash::find_team_from_timeset;
+use crate::utils::hash::{find_team_from_timeset, determine_team_hashmap, find_team_from_str};
 
 
-pub fn create_schedule(matches: Vec<Match>, filtered_matches: Vec<Match>, teams: Vec<Team>) -> Vec<Match> {
+pub struct ScheduleResults {
+    pub(crate) schedule: Vec<Match>,
+    pub(crate) teams: Vec<Team>,
+    pub(crate) team_infos: HashMap<String, SchedulingTeamInfo>, // Added field
+}
 
-    // Availability hashmap for all the teams
-    let availability: Availability = determine_availability(matches, &filtered_matches, teams);
+#[derive(Debug, Eq, Hash, PartialEq, Clone)]
+pub struct SchedulingTeamInfo {
+    pub team: Team,
+    pub turns_completed: i32,
+    pub turns_needed: i32,  // Added field
+    pub last_play_time: Option<(NaiveDate, NaiveTime)>,
+}
 
-    let schedule: Vec<Match> = Vec::new();
+pub fn create_schedule(matches: Vec<Match>, filtered_matches: Vec<Match>, teams: Vec<Team>) -> ScheduleResults {
+    let hashmapset = determine_availability(matches.clone(), &filtered_matches, teams.clone());
 
-    // Go over the matches that need to be divided across the teams -> check what teams are available
-    // score the teams for "best fit" -> go along the list who is "eligible" to ref.
-    // TODO: Balancing -> option is going over the teams again if over amount of req. turns (adjustment loop)
+    let mut schedule: Vec<Match> = Vec::new();
 
-    // filtered matches are the home-only
-    for m in filtered_matches {
+    // Create a mutable map to track scheduling information for each team
+    let mut team_infos = teams.into_iter().map(|team| {
+        (team.name.clone(), SchedulingTeamInfo {
+            team: team.clone(),
+            turns_completed: 0,
+            turns_needed: team.turns_needed,
+            last_play_time: None,
+        })
+    }).collect::<HashMap<_, _>>();
+
+    for mut m in filtered_matches {
         if m.first_ref == "" {
-            let teams_available = find_available_teams(&m.date, &m.time, &availability);
+            let teams_available = find_available_teams(&m.date, &m.time, &hashmapset.availability);
 
-            // Sort in order of "best"
-            let sorted_teams = sort_by_score(teams_available, &filtered_matches);
+            let mut best_score = None;
+            let mut selected_team_name = None;
 
+            for team in teams_available {
+                let team_info = team_infos.get(&team.name).unwrap();
+
+                // Check if the team still has refereeing turns left
+                if team_info.turns_completed < team_info.turns_needed {
+                    let score = calculate_score(&team_info.team, m.date, m.time, &matches);
+
+                    if best_score.is_none() || score > best_score.unwrap() {
+                        best_score = Some(score);
+                        selected_team_name = Some(team.name.clone());
+                    }
+                }
+            }
+
+            if let Some(team_name) = selected_team_name {
+                m.first_ref = team_name.clone();
+
+                // Update the turns information for the selected team
+                if let Some(team_info) = team_infos.get_mut(&team_name) {
+                    team_info.turns_completed += 1;
+                }
+            }
+
+            schedule.push(m);
         }
     }
 
-    schedule
+    // Convert team_infos back to Vec<Team> if needed
+    let updated_teams = team_infos.clone().into_iter().map(|(_name, info)| info.team).collect::<Vec<_>>();
+
+    ScheduleResults {
+        schedule,
+        teams: updated_teams, // This might be the original or updated list of teams
+        team_infos, // Now includes detailed refereeing information
+    }
 }
 
-fn determine_availability(matches: Vec<Match>, filtered_matches: &Vec<Match>, teams: Vec<Team>) -> Availability {
+
+fn determine_availability(matches: Vec<Match>, filtered_matches: &Vec<Match>, teams: Vec<Team>) -> HashmapSet {
     // TODO: Availability right now has the problem that 15 minutes in-to the game can possibly count as "available"
 
     // Hashmap with for each team, the times that they are available
-    let mut availability: Availability = HashMap::new();
+
+    let mut hashmapset = HashmapSet {
+        availability: Default::default(),
+        playtimes: Default::default(),
+    };
 
     // The timeslots we'll need to check availability for
     let timeslots = determine_timeslots(&matches);
@@ -47,13 +101,15 @@ fn determine_availability(matches: Vec<Match>, filtered_matches: &Vec<Match>, te
 
         // populate the personal team availability vector (in this case we're using filtered matches since we only
         // want the teams who have "home" matches to referee)
-        let team_availability: Vec<(NaiveDate, NaiveTime)> = populate_team_availability(&t, &filtered_matches, &timeslots);
+        let team_schedule: TeamSchedule = populate_team_availability(&t, &filtered_matches, &timeslots);
 
         // After populating the teams_availability vector of tuples, we can insert it into our availability hashmap
-        availability.insert(t, team_availability);
+        // TODO: creating two instances --> instead use references
+        hashmapset.availability.insert(t.clone(), team_schedule.available_times);
+        hashmapset.playtimes.insert(t, team_schedule.play_times);
     }
 
-    availability
+    hashmapset
 }
 
 fn determine_timeslots(matches: &Vec<Match>) -> Timeslots {
@@ -75,30 +131,31 @@ fn determine_timeslots(matches: &Vec<Match>) -> Timeslots {
 }
 
 
-fn populate_team_availability (team: &Team, matches: &Vec<Match>, timeslots: &Timeslots) -> Vec<(NaiveDate, NaiveTime)> {
-    let mut team_availability: Vec<(NaiveDate, NaiveTime)> = Vec::new();
+fn populate_team_availability(team: &Team, matches: &Vec<Match>, timeslots: &Timeslots) -> TeamSchedule {
+    let mut play_times_set = HashSet::new();
+    let mut team_schedule = TeamSchedule {
+        available_times: Vec::new(),
+        play_times: Vec::new(),
+    };
 
+    // First, collect all the play times
     for m in matches {
-        // Check if the team is playing at home
-        if m.home_team == team.name  {
-            // add that day to their availability -> remove the time they are playing
-
-            // get the date timeslots from the timeslots hashmap
-            let mut times = timeslots.get(&m.date).unwrap();
-
-            // keep only the times where the team is free
-            let times = times.into_iter().filter(|time| **time != m.time).cloned().collect::<Vec<NaiveTime>>();
-
-            // add the (date, time) combo to the team_availability hashmap
-            for t in times {
-                team_availability.push((m.date, t));
-            }
-
-
+        if m.home_team == team.name {
+            play_times_set.insert((m.date, m.time));
+            team_schedule.play_times.push((m.date, m.time));
         }
     }
 
-    team_availability
+    // Then, iterate through the timeslots to determine availability
+    for (&date, times) in timeslots {
+        for &time in times {
+            if !play_times_set.contains(&(date, time)) {
+                team_schedule.available_times.push((date, time));
+            }
+        }
+    }
+
+    team_schedule
 }
 
 
@@ -109,18 +166,26 @@ fn find_available_teams(date: &NaiveDate, time: &NaiveTime, availability: &Avail
     // problem We have (NaiveDate, Vec<NaiveTime>)
 
     let teams_available: Vec<Team> = find_team_from_timeset(availability, timeset);
-    println!("{:?}", teams_available);
 
     teams_available
 }
 
-fn sort_by_score(available_teams: Vec<Team>, matches: &Vec<Match>) -> Vec<Team> {
-    let sorted: Vec<Team> = Vec::new();
+fn calculate_score(team: &Team, referee_match_date: NaiveDate, referee_match_time: NaiveTime, matches: &Vec<Match>) -> i32 {
+    let mut score = 0;
 
+    // Score based on turns remaining
+    let turns_remaining = team.turns_needed;
+    score += turns_remaining * WEIGHT_REMAINING_TURNS; // Weight for turns remaining
 
+    // Find the team's match on the same day and calculate the time gap
+    if let Some(team_match) = matches.iter().find(|m| m.date == referee_match_date && (m.home_team == team.name || m.away_team == team.name)) {
+        let gap = (referee_match_time - team_match.time).num_minutes().abs();
+        if gap <= MAX_GAP_THRESHOLD.into() {
+            score += 10; // Within threshold, add points
+        } else {
+            score -= 10; // Exceeds threshold, subtract points
+        }
+    }
 
-
-
-    sorted
+    score
 }
-

@@ -11,3 +11,7 @@ impl ExcelTimeConverter {
         NaiveTime::from_hms_opt(hours, minutes, seconds).unwrap()
     }
 }
+
+pub fn compare_timeslots(time1: NaiveTime, time2: NaiveTime) {
+    
+}
