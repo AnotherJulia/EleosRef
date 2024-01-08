@@ -1,6 +1,6 @@
 use chrono::{NaiveDate, NaiveTime};
 use office::Excel;
-use crate::models::matches::{ExcelMatch, Match};
+use crate::models::matches::{Match};
 use crate::utils::time::{ExcelTimeConverter};
 use crate::utils::date::{ExcelDateConverter};
 

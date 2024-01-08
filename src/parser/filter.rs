@@ -1,5 +1,5 @@
 use chrono::{NaiveDate, NaiveTime};
-use crate::models::matches::{ExcelMatch, Match};
+use crate::models::matches::{Match};
 
 static mut INVALID_DATE: Option<NaiveDate> = None;
 static mut INVALID_TIME: Option<NaiveTime> = None;

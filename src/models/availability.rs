@@ -1,5 +1,7 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use chrono::{NaiveDate, NaiveTime};
+use crate::models::team::Team;
 
-pub type TeamName = String;
-pub(crate) type Availability = HashMap<String, HashMap<NaiveDate, HashSet<NaiveTime>>>;
+pub type Availability = HashMap<Team, Vec<(NaiveDate, NaiveTime)>>;
+
+pub type Timeslots = HashMap<NaiveDate, Vec<NaiveTime>>;
