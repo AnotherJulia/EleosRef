@@ -6,7 +6,7 @@ static mut INVALID_TIME: Option<NaiveTime> = None;
 
 
 const EXCLUSION_TEAMS: [&str; 3] = ["Volley2B HS 1", "Volley2B HS 2", "Volley2B DS 1"];
-const EXCLUSION_GROUPS: [&str; 2] = ["Volley2B XR", "Volley2B HR"];
+const EXCLUSION_GROUPS: [&str; 6] = ["Volley2B XR", "Volley2B HR", "Volley2B MC", "Volley2B JC", "Volley2B MB", "Volley2b JB"];
 
 pub fn init() {
 

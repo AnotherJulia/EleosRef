@@ -1,44 +1,86 @@
 {
   "Volley2B DS 1": {
-    "points": -300
+    "points": -300,
+    "no_ref_teams": [],
+    "no_ref_groups": ["Volley2B XR","Volley2B HR", "Volley2B M","Volley2B J"],
+    "no_ref_filters": ["RECR", "JEUGD"]
   },
   "Volley2B DS 2": {
-    "points": -300
+    "points": -300,
+    "no_ref_teams": [],
+    "no_ref_groups": [],
+    "no_ref_filters": ["RECR"]
   },
   "Volley2B DS 3": {
-    "points": -450
+    "points": -450,
+    "no_ref_teams": [],
+    "no_ref_groups": [],
+    "no_ref_filters": ["RECR"]
   },
   "Volley2B DS 4": {
-    "points": -50
+    "points": -50,
+    "no_ref_teams": [],
+    "no_ref_groups": ["Volley2B XR","Volley2B HR", "Volley2B M","Volley2B J"],
+    "no_ref_filters": ["RECR", "JEUGD"]
   },
   "Volley2B DS 5": {
-    "points": -125
+    "points": -125,
+    "no_ref_teams": [],
+    "no_ref_groups": [],
+    "no_ref_filters": ["RECR"]
   },
   "Volley2B DS 6": {
-    "points": 150
+    "points": 150,
+    "no_ref_teams": [],
+    "no_ref_groups": [],
+    "no_ref_filters": ["RECR"]
   },
   "Volley2B DS 7": {
-    "points": -375
+    "points": -375,
+    "no_ref_teams": [],
+    "no_ref_groups": [],
+    "no_ref_filters": ["RECR"]
   },
   "Volley2B DS 8": {
-    "points": -200
+    "points": -200,
+    "no_ref_teams": [],
+    "no_ref_groups": [],
+    "no_ref_filters": ["RECR"]
   },
   "Volley2B DS 9": {
-    "points": -575
+    "points": -575,
+    "no_ref_teams": [],
+    "no_ref_groups": [],
+    "no_ref_filters": ["RECR"]
   },
   "Volley2B HS 1": {
-    "points": -350
+    "points": -350,
+    "no_ref_teams": [],
+    "no_ref_groups": ["Volley2B XR","Volley2B HR", "Volley2B M","Volley2B J"],
+    "no_ref_filters": ["RECR"]
   },
   "Volley2B HS 2": {
-    "points": 25
+    "points": 25,
+    "no_ref_teams": [],
+    "no_ref_groups": [],
+    "no_ref_filters": ["RECR"]
   },
   "Volley2B HS 3": {
-    "points": 150
+    "points": 150,
+    "no_ref_teams": [],
+    "no_ref_groups": [],
+    "no_ref_filters": ["RECR"]
   },
   "Volley2B HS 4": {
-    "points": -250
+    "points": -250,
+    "no_ref_teams": [],
+    "no_ref_groups": [],
+    "no_ref_filters": ["RECR"]
   },
   "Volley2B HS 5": {
-    "points": -175
+    "points": -175,
+    "no_ref_teams": [],
+    "no_ref_groups": [],
+    "no_ref_filters": ["RECR"]
   }
 }

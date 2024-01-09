@@ -39,7 +39,7 @@ pub fn create_schedule(matches: Vec<Match>, filtered_matches: Vec<Match>, teams:
 
     for mut m in filtered_matches {
         if m.first_ref == "" {
-            let teams_available = find_available_teams(&m.date, &m.time, &hashmapset.availability);
+            let teams_available = find_available_teams(m.home_team.clone(), &m.date, &m.time, &hashmapset.availability);
 
             let mut best_score = None;
             let mut selected_team_name = None;
@@ -159,13 +159,18 @@ fn populate_team_availability(team: &Team, matches: &Vec<Match>, timeslots: &Tim
 }
 
 
-fn find_available_teams(date: &NaiveDate, time: &NaiveTime, availability: &Availability) -> Vec<Team> {
+fn find_available_teams(home_team: String, date: &NaiveDate, time: &NaiveTime, availability: &Availability) -> Vec<Team> {
 
-    // filter out the time and date from the hashmap -> find available teams
     let timeset: (NaiveDate, NaiveTime) = (*date, *time);
-    // problem We have (NaiveDate, Vec<NaiveTime>)
 
-    let teams_available: Vec<Team> = find_team_from_timeset(availability, timeset);
+    let all_teams: Vec<Team> = find_team_from_timeset(availability, timeset);
+
+    let teams_available: Vec<Team> = all_teams
+        .iter()
+        .filter(|t|
+            !t.no_ref_teams.contains(&home_team) &&
+                !t.no_ref_groups.iter().any(|ref_group| home_team.starts_with(ref_group))
+        ).cloned().collect();
 
     teams_available
 }
@@ -175,7 +180,7 @@ fn calculate_score(team: &Team, referee_match_date: NaiveDate, referee_match_tim
 
     // Score based on turns remaining
     let turns_remaining = team.turns_needed;
-    score += turns_remaining * WEIGHT_REMAINING_TURNS; // Weight for turns remaining
+    score += turns_remaining * 1; // Weight for turns remaining
 
     // Find the team's match on the same day and calculate the time gap
     if let Some(team_match) = matches.iter().find(|m| m.date == referee_match_date && (m.home_team == team.name || m.away_team == team.name)) {

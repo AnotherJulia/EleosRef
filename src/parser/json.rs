@@ -3,8 +3,11 @@ use crate::models::team::Team;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
-struct Data {
-    points: i32,
+pub struct Data {
+    pub points: i32,
+    pub no_ref_teams: Option<Vec<String>>,
+    pub no_ref_groups: Option<Vec<String>>,
+    pub no_ref_filters: Option<Vec<String>>,
 }
 
 // TODO: Refactor -> Extract out Functions
@@ -23,6 +26,9 @@ pub fn extract_team_data(path: &str, n_matches: i32) -> Vec<Team> {
             name,
             points: team.points,
             turns_needed: 0,
+            no_ref_teams: team.no_ref_teams.unwrap_or(Vec::new()),
+            no_ref_groups: team.no_ref_groups.unwrap_or(Vec::new()),
+            no_ref_filters: team.no_ref_filters.unwrap_or(Vec::new()),
         };
 
         teams.push(t);

@@ -27,13 +27,16 @@ fn main() {
     let filtered_matches: Vec<Match> = filter_matches(&matches, home_location);
 
     let number_of_matches = filtered_matches.len() as i32;
+    println!("{:?}", number_of_matches);
 
     // let extract the team data -> finding the number of turns per team
     let teams = extract_team_data(team_location, number_of_matches);
 
-    for t in teams {
+    for t in &teams {
         println!("{:?}", t);
     }
 
-    let schedule = create_schedule()
+    let schedule = create_schedule(matches, filtered_matches, teams);
+
+    let ok = prepare_and_write_schedule(schedule, "test.csv");
 }
